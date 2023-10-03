@@ -163,10 +163,15 @@ void ScoreVerticalViewLayout::doLayout(LayoutContext& ctx)
     LOGI() << "start";
     const MeasureBase* lmb = nullptr;
     do {
+        LOGI() << "do lmb: " << lmb;
+        LOGI() << "getNextPage";
         PageLayout::getNextPage(ctx);
+        LOGI() << "collectPage";
         PageLayout::collectPage(ctx);
 
+        LOGI() << "before long if";
         if (ctx.state().page() && !ctx.state().page()->systems().empty()) {
+            LOGI() << "ctx.state().page() && !ctx.state().page()->systems().empty()";
             lmb = ctx.state().page()->systems().back()->measures().back();
         } else {
             lmb = nullptr;
@@ -184,17 +189,20 @@ void ScoreVerticalViewLayout::doLayout(LayoutContext& ctx)
     } while (ctx.state().curSystem() && !(ctx.state().rangeDone() && lmb == ctx.state().pageOldMeasure()));
     // && page->system(0)->measures().back()->tick() > endTick // FIXME: perhaps the first measure was meant? Or last system?
 
+    LOGI() << "if (!ctx.state().curSystem())";
     if (!ctx.state().curSystem()) {
         // The end of the score. The remaining systems are not needed...
         DeleteAll(ctx.mutState().systemList());
         ctx.mutState().systemList().clear();
         // ...and the remaining pages too
         while (ctx.dom().npages() > ctx.state().pageIdx()) {
+            LOGI() << "while (ctx.dom().npages() > ctx.state().pageIdx())";
             Page* p = ctx.mutDom().pages().back();
             ctx.mutDom().pages().pop_back();
             delete p;
         }
     } else {
+        LOGI() << " else after while (ctx.dom().npages() > ctx.state().pageIdx())";
         Page* p = ctx.mutState().curSystem()->page();
         if (p && (p != ctx.state().page())) {
             p->invalidateBspTree();

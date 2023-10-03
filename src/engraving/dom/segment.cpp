@@ -2824,7 +2824,7 @@ void Segment::computeCrossBeamType(Segment* nextSeg)
  * method.
  * *********************************************/
 
-void Segment::stretchSegmentsToWidth(std::vector<Spring> springs, double width)
+void Segment::stretchSegmentsToWidth(std::vector<Spring>& springs, double width)
 {
     LOGI() << "Start width: " << width;
     LOGI() << "size: " << springs.size();

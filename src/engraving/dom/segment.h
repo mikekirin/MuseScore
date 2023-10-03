@@ -281,7 +281,7 @@ public:
     double widthOffset() const { return _widthOffset; }
     void setWidthOffset(double w) { _widthOffset = w; }
 
-    static void stretchSegmentsToWidth(std::vector<Spring> springs, double width);
+    void stretchSegmentsToWidth(std::vector<Spring>& springs, double width);
 
     double elementsTopOffsetFromSkyline(staff_idx_t staffIndex) const;
     double elementsBottomOffsetFromSkyline(staff_idx_t staffIndex) const;

@@ -972,6 +972,8 @@ void GP67DomBuilder::readNoteProperties(XmlDomNode* propertiesNode, GPNote* note
             }
         } else if (propertyName == u"HopoOrigin") {
             note->setHammerOn(GPNote::HammerOn::Start);
+        } else if (propertyName == u"HopoDestination") {
+            note->setHammerOn(GPNote::HammerOn::End);
         } else if (propertyName == u"Tapped") {
             if (propertyNode.firstChild().nodeName() == "Enable") {
                 note->setTapping(true);

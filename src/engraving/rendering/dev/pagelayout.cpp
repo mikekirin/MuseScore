@@ -111,7 +111,7 @@ void PageLayout::getNextPage(LayoutContext& ctx)
 void PageLayout::collectPage(LayoutContext& ctx)
 {
     TRACEFUNC;
-
+    LOGI() << "start";
     const double slb = ctx.conf().styleMM(Sid::staffLowerBorder);
     bool breakPages = ctx.conf().viewMode() != LayoutMode::SYSTEM;
     double footerExtension = ctx.state().page()->footerExtension();

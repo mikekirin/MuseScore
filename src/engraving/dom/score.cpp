@@ -5539,6 +5539,8 @@ void Score::doLayoutRange(const Fraction& st, const Fraction& et)
 {
     TRACEFUNC;
 
+    LOGI() << "doLayoutRange start";
+    LOGI() << "doLayoutRange getting font";
     m_engravingFont = engravingFonts()->fontByName(style().value(Sid::MusicalSymbolFont).value<String>().toStdString());
     m_layoutOptions.noteHeadWidth = m_engravingFont->width(SymId::noteheadBlack, style().spatium() / SPATIUM20);
 
@@ -5552,7 +5554,9 @@ void Score::doLayoutRange(const Fraction& st, const Fraction& et)
         this->updateVelo();
     }
 
+    LOGI() << "doLayoutRange before layout score";
     renderer()->layoutScore(this, st, et);
+    LOGI() << "doLayoutRange after layout score";
 
     if (m_resetAutoplace) {
         m_resetAutoplace = false;

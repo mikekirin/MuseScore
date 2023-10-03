@@ -47,6 +47,7 @@ public:
 
 void ScoreLayout::layoutRange(Score* score, const Fraction& st, const Fraction& et)
 {
+    LOGI() << "Layout range start. Score: " << score;
     CmdStateLocker cmdStateLocker(score);
     LayoutContext ctx(score);
 
@@ -80,13 +81,16 @@ void ScoreLayout::layoutRange(Score* score, const Fraction& st, const Fraction& 
     switch (ctx.conf().viewMode()) {
     case LayoutMode::PAGE:
     case LayoutMode::FLOAT:
+        LOGI() << "Layout range. Page view";
         ScorePageViewLayout::layoutPageView(score, ctx, stick, etick);
         break;
     case LayoutMode::LINE:
     case LayoutMode::HORIZONTAL_FIXED:
+        LOGI() << "Layout range. Horizontal view";
         ScoreHorizontalViewLayout::layoutHorizontalView(score, ctx, stick, etick);
         break;
     case LayoutMode::SYSTEM:
+        LOGI() << "Layout range. Vertical view";
         ScoreVerticalViewLayout::layoutVerticalView(score, ctx, stick, etick);
         break;
     }

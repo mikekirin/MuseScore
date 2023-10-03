@@ -43,6 +43,7 @@ using namespace mu::engraving::rendering::dev;
 
 void ScorePageViewLayout::layoutPageView(Score* score, LayoutContext& ctx, const Fraction& stick, const Fraction& etick)
 {
+    LOGI() << "Layout page view start";
     ctx.mutState().setEndTick(etick);
 
     //---------------------------------------------------
@@ -153,6 +154,7 @@ void ScorePageViewLayout::layoutPageView(Score* score, LayoutContext& ctx, const
     }
 
     doLayout(ctx);
+    LOGI() << "Layout page view end";
 }
 
 void ScorePageViewLayout::doLayout(LayoutContext& ctx)

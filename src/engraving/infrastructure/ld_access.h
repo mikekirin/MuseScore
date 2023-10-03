@@ -43,7 +43,7 @@ enum class LD_ACCESS {
     } \
 
 #else
-#define LD_CONDITION(val)
+#define LD_CONDITION
 #endif
 
 // mark as independent

@@ -541,7 +541,10 @@ void SystemLayout::justifySystem(System* system, double curSysWidth, double targ
                 double springConst = 1 / s.stretch();
                 double width = s.width() - s.widthOffset();
                 double preTension = width * springConst;
-                springs.push_back(Spring(springConst, width, preTension, &s));
+                if (isnan(preTension)) {
+                    preTension = 0.0;
+                }
+                springs.emplace_back(springConst, width, preTension, &s);
             }
         }
     }

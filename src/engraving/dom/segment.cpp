@@ -2833,9 +2833,7 @@ void Segment::stretchSegmentsToWidth(std::vector<Spring>& springs, double width)
         LOGI() << "Empty";
         return;
     }
-    if (springs.size() != 79) {
-        std::sort(springs.begin(), springs.end(), [](const Spring& a, const Spring& b) { return a.preTension < b.preTension; });
-    }
+    std::sort(springs.begin(), springs.end(), [](const Spring& a, const Spring& b) { return a.preTension < b.preTension; });
     double inverseSpringConst = 0.0;
     double force = 0.0;
 

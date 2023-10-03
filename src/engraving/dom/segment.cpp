@@ -2826,13 +2826,15 @@ void Segment::computeCrossBeamType(Segment* nextSeg)
 
 void Segment::stretchSegmentsToWidth(std::vector<Spring>& springs, double width)
 {
-    LOGI() << "Start";
+    LOGI() << "Start width: " << width;
+    LOGI() << "size: " << springs.size();
+    LOGI() << "empty: " << springs.empty();
     if (springs.empty() || RealIsEqualOrLess(width, 0.0)) {
         LOGI() << "Empty";
         return;
     }
 
-//    std::sort(springs.begin(), springs.end(), [](const Spring& a, const Spring& b) { return a.preTension < b.preTension; });
+    std::sort(springs.begin(), springs.end(), [](const Spring& a, const Spring& b) { return a.preTension < b.preTension; });
     double inverseSpringConst = 0.0;
     double force = 0.0;
 

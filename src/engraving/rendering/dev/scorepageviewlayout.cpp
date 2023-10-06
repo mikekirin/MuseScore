@@ -157,6 +157,7 @@ void ScorePageViewLayout::layoutPageView(Score* score, LayoutContext& ctx, const
 
 void ScorePageViewLayout::doLayout(LayoutContext& ctx)
 {
+    LOGI() << "start";
     const MeasureBase* lmb = nullptr;
     do {
         PageLayout::getNextPage(ctx);
@@ -197,4 +198,5 @@ void ScorePageViewLayout::doLayout(LayoutContext& ctx)
         }
     }
     ctx.mutDom().systems().insert(ctx.mutDom().systems().end(), ctx.state().systemList().begin(), ctx.state().systemList().end());
+    LOGI() << "end";
 }

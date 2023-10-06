@@ -43,6 +43,7 @@ using namespace mu::engraving::rendering::dev;
 
 void ScoreVerticalViewLayout::layoutVerticalView(Score* score, LayoutContext& ctx, const Fraction& stick, const Fraction& etick)
 {
+    LOGI() << "start";
     ctx.mutState().setEndTick(etick);
 
     //---------------------------------------------------
@@ -153,10 +154,12 @@ void ScoreVerticalViewLayout::layoutVerticalView(Score* score, LayoutContext& ct
     }
 
     doLayout(ctx);
+    LOGI() << "end";
 }
 
 void ScoreVerticalViewLayout::doLayout(LayoutContext& ctx)
 {
+    LOGI() << "start";
     const MeasureBase* lmb = nullptr;
     do {
         PageLayout::getNextPage(ctx);
@@ -197,4 +200,5 @@ void ScoreVerticalViewLayout::doLayout(LayoutContext& ctx)
         }
     }
     ctx.mutDom().systems().insert(ctx.mutDom().systems().end(), ctx.state().systemList().begin(), ctx.state().systemList().end());
+    LOGI() << "end";
 }

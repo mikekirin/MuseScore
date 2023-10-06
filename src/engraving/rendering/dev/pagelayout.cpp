@@ -66,6 +66,7 @@ using namespace mu::engraving::rendering::dev;
 
 void PageLayout::getNextPage(LayoutContext& ctx)
 {
+    LOGI() << "start";
     if (!ctx.state().page() || ctx.state().pageIdx() >= ctx.dom().npages()) {
         ctx.mutState().setPage(Factory::createPage(ctx.mutDom().rootItem()));
         ctx.mutDom().pages().push_back(ctx.mutState().page());
@@ -102,6 +103,7 @@ void PageLayout::getNextPage(LayoutContext& ctx)
     }
     ctx.mutState().setPageIdx(ctx.state().pageIdx() + 1);
     ctx.mutState().page()->setPos(x, y);
+    LOGI() << "end";
 }
 
 //---------------------------------------------------------
@@ -112,6 +114,8 @@ void PageLayout::collectPage(LayoutContext& ctx)
 {
     TRACEFUNC;
 
+    LOGI() << "start";
+    auto start = std::chrono::high_resolution_clock::now();
     const double slb = ctx.conf().styleMM(Sid::staffLowerBorder);
     bool breakPages = ctx.conf().viewMode() != LayoutMode::SYSTEM;
     double footerExtension = ctx.state().page()->footerExtension();
@@ -381,6 +385,9 @@ void PageLayout::collectPage(LayoutContext& ctx)
     }
 
     ctx.mutState().page()->invalidateBspTree();
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    LOGI() << "Execution time: " << duration.count() << " milliseconds";
 }
 
 //---------------------------------------------------------

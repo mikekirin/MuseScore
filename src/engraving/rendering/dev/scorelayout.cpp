@@ -47,6 +47,7 @@ public:
 
 void ScoreLayout::layoutRange(Score* score, const Fraction& st, const Fraction& et)
 {
+    LOGI() << "start";
     CmdStateLocker cmdStateLocker(score);
     LayoutContext ctx(score);
 
@@ -90,4 +91,5 @@ void ScoreLayout::layoutRange(Score* score, const Fraction& st, const Fraction& 
         ScoreVerticalViewLayout::layoutVerticalView(score, ctx, stick, etick);
         break;
     }
+    LOGI() << "end";
 }

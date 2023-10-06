@@ -5538,6 +5538,7 @@ void Score::doLayout()
 void Score::doLayoutRange(const Fraction& st, const Fraction& et)
 {
     TRACEFUNC;
+    LOGI() << "start";
 
     m_engravingFont = engravingFonts()->fontByName(style().value(Sid::MusicalSymbolFont).value<String>().toStdString());
     m_layoutOptions.noteHeadWidth = m_engravingFont->width(SymId::noteheadBlack, style().spatium() / SPATIUM20);

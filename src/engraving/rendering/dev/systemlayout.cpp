@@ -2202,6 +2202,7 @@ void SystemLayout::layout2(System* system, LayoutContext& ctx)
 
 void SystemLayout::restoreLayout2(System* system, LayoutContext& ctx)
 {
+    LOGI() << "start";
     if (system->vbox()) {
         return;
     }

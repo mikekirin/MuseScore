@@ -145,12 +145,17 @@ void PageLayout::collectPage(LayoutContext& ctx)
         SystemLayout::restoreLayout2(cs, ctx);
         y += cs->height();
     }
-
+    LOGI() << "Before endless for";
+    int counter = 0;
     for (;;) {
+        if (counter++ % 10 == 0) {
+            LOGI() << "Still in for loop";
+        }
         //
         // calculate distance to previous system
         //
         double distance;
+        LOGI() << "Distance init value" << distance;
         if (ctx.state().prevSystem()) {
             distance = SystemLayout::minDistance(ctx.state().prevSystem(), ctx.state().curSystem(), ctx);
             if (ctx.conf().isPrintingMode()) {
@@ -192,6 +197,8 @@ void PageLayout::collectPage(LayoutContext& ctx)
                 }
             }
         }
+
+        LOGI() << "Distance should be initialised here. Distance value: " << distance;
 
         y += distance;
         ctx.mutState().curSystem()->setPos(ctx.state().page()->lm(), y);
@@ -265,6 +272,7 @@ void PageLayout::collectPage(LayoutContext& ctx)
             break;
         }
     }
+    LOGI() << "Exited endless for";
 
     Fraction stick = Fraction(-1, 1);
     for (System* s : ctx.mutState().page()->systems()) {

@@ -2213,6 +2213,7 @@ void SystemLayout::restoreLayout2(System* system, LayoutContext& ctx)
 
     system->setHeight(system->systemHeight());
     SystemLayout::setMeasureHeight(system, system->systemHeight(), ctx);
+    LOGI() << "end";
 }
 
 void SystemLayout::setMeasureHeight(System* system, double height, LayoutContext& ctx)

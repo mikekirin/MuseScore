@@ -2651,7 +2651,7 @@ void Segment::stretchSegmentsToWidth(std::vector<Spring>& springs, double width)
         return;
     }
 
-    std::stable_sort(springs.begin(), springs.end(), [](const Spring& a, const Spring& b) {
+    std::sort(springs.begin(), springs.end(), [](const Spring& a, const Spring& b) {
         LOGI() << "sorting: " << " a: " << a.preTension << " b: " << b.preTension << " :: " << (a.preTension < b.preTension);
         return a.preTension < b.preTension; });
     double inverseSpringConst = 0.0;

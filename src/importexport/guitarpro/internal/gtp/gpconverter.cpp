@@ -47,6 +47,8 @@
 #include "engraving/dom/tripletfeel.h"
 #include "engraving/dom/tuplet.h"
 #include "engraving/dom/volta.h"
+#include "engraving/dom/stringtunings.h"
+#include "engraving/types/symid.h"
 
 #include "../utils.h"
 #include "../guitarprodrumset.h"
@@ -355,6 +357,7 @@ void GPConverter::convert(const std::vector<std::unique_ptr<GPMasterBar> >& mast
 
     addFermatas();
     addContinuousSlideHammerOn();
+    addTuning();
 }
 
 void GPConverter::convertMasterBar(const GPMasterBar* mB, Context ctx)
@@ -1178,6 +1181,7 @@ void GPConverter::setUpTrack(const std::unique_ptr<GPTrack>& tR)
         part->setCapoFret(capoFret);
         auto tunning = staffProperty[0].tunning;
         bool usePresetTable = staffProperty[0].ignoreFlats;
+        auto m = _score->tick2measure({ 0, 1 });
 
         std::array<uint64_t, 3> flatPresets{ 0x3f3a36312c27, 0x3c37332e2924, 0x3f3a36312c25 };
 
@@ -3008,5 +3012,65 @@ void GPConverter::setBeamMode(const GPBeat* beat, ChordRest* cr, Measure* measur
 
     cr->setBeamMode(m_previousBeamMode);
     m_previousBeamMode = beamMode;
+}
+
+void GPConverter::addTuning()
+{
+    std::array<int, 6> standardTuning{ 52, 57, 62, 67, 71, 76 };
+
+    auto isStandardTuning = [&standardTuning](const StringData* sd) -> bool {
+        const auto& sl = sd->stringList();
+
+        if (sl.size() != standardTuning.size()) {
+            return false;
+        }
+
+        for (size_t i = 0; i < standardTuning.size(); ++i) {
+            if (sl.at(i).pitch != standardTuning.at(i)) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+    const Measure* m = _score->firstMeasure();
+
+    // NOTE: GP doesn't support multiple tunings on one part
+    // We're safe to just take the very first chord rest segment
+    // and check if it has any non-standard tuning
+    const Fraction& f{ 0, 1 };
+
+    for (auto p : _score->parts()) {
+        for (auto s : p->staves()) {
+            if (!s->isPrimaryStaff()) {
+                continue;
+            }
+
+            auto sd = p->stringData(f, s->idx());
+            std::vector<size_t> visibleStrings(sd->stringList().size());
+
+            for (size_t i = 0; i < visibleStrings.size(); ++i) {
+                visibleStrings[i] = i;
+            }
+
+            if (isStandardTuning(sd)) {
+                continue;
+            }
+
+            Segment* seg = m->findSegment(SegmentType::ChordRest, f);
+
+            IF_ASSERT_FAILED(seg) {
+                LOGE() << "First measure MUST has a chord rest segment after import";
+                return;
+            }
+
+            StringTunings* tun = Factory::createStringTunings(seg);
+            tun->setStringData(*sd);
+            tun->setVisibleStrings(visibleStrings);
+            tun->setTrack(staff2track(s->idx()));
+            tun->setParent(seg);
+            seg->add(tun);
+        }
+    }
 }
 } // namespace mu::iex::guitarpro

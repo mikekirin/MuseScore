@@ -295,6 +295,7 @@ System* SystemLayout::collectSystem(LayoutContext& ctx)
             break;
         }
     }
+    LOGI() << "Measures collected";
 
     assert(ctx.state().prevMeasure());
 
@@ -367,7 +368,9 @@ System* SystemLayout::collectSystem(LayoutContext& ctx)
     }
 
     // Hide empty staves
+    LOGI() << "Hiding empty staves";
     hideEmptyStaves(system, ctx, ctx.state().firstSystem());
+    LOGI() << "Hiding empty staves done";
 
     // Re-create shapes to account for newly hidden/unhidden staves
     // (and for potential forgotten shape updates, for example in MeasureLayout::setRepeatCourtesiesAndParens)
@@ -424,8 +427,12 @@ System* SystemLayout::collectSystem(LayoutContext& ctx)
         }
     }
 
+    LOGI() << "Layout system elements";
     layoutSystemElements(system, ctx);
+    LOGI() << "Layout system elements done";
+    LOGI() << "Layout 2";
     SystemLayout::layout2(system, ctx);     // compute staff distances
+    LOGI() << "Layout 2 done";
 
     if (oldSystem && !oldSystem->measures().empty() && oldSystem->measures().front()->tick() >= system->endTick()
         && !(oldSystem->page() && oldSystem->page() != ctx.state().page())) {
@@ -435,6 +442,7 @@ System* SystemLayout::collectSystem(LayoutContext& ctx)
         // Restore them to the correct state.
         SystemLayout::restoreOldSystemLayout(oldSystem, ctx);
     }
+    LOGI() << "Collect system done";
 
     return system;
 }
@@ -1136,6 +1144,7 @@ void SystemLayout::layoutFretDiagrams(const ElementsToLayout& elements, System* 
 void SystemLayout::layoutSystemElements(System* system, LayoutContext& ctx)
 {
     TRACEFUNC;
+    LOGI() << "layoutSystemElements";
 
     if (ctx.dom().nstaves() == 0) {
         return;
@@ -1330,6 +1339,7 @@ void SystemLayout::layoutSystemElements(System* system, LayoutContext& ctx)
     }
 
     layoutParenthesisAndBigTimeSigs(elementsToLayout);
+    LOGI() << "layoutSystemElements done";
 }
 
 void SystemLayout::collectElementsToLayout(Measure* measure, ElementsToLayout& elements, const LayoutContext& ctx)

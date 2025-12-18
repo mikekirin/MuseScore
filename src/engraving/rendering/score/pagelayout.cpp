@@ -176,6 +176,7 @@ void PageLayout::collectPage(LayoutContext& ctx)
                 distance = ctx.conf().styleMM(Sid::staffUpperBorder);
                 bool fixedDistance = false;
                 for (MeasureBase* mb : ctx.mutState().curSystem()->measures()) {
+                    LOGI() << "Inside measure loop";
                     if (mb->isMeasure()) {
                         Measure* m = toMeasure(mb);
                         Spacer* sp = m->vspacerUp(0);
@@ -227,6 +228,7 @@ void PageLayout::collectPage(LayoutContext& ctx)
         } else {
             nextSystem = SystemLayout::collectSystem(ctx);
             if (nextSystem) {
+                LOGI() << "Next system";
                 collected = true;
             }
         }
@@ -243,6 +245,7 @@ void PageLayout::collectPage(LayoutContext& ctx)
         bool isPageBreak = !ctx.state().curSystem() || (breakPages && ctx.state().prevSystem()->pageBreak());
 
         if (!isPageBreak) {
+            LOGI() << "No Page Break";
             double dist = SystemLayout::minDistance(ctx.state().prevSystem(), ctx.state().curSystem(), ctx)
                           + ctx.state().curSystem()->height();
             Box* vbox = ctx.state().curSystem()->vbox();
@@ -279,6 +282,7 @@ void PageLayout::collectPage(LayoutContext& ctx)
             break;
         }
     }
+    LOGI() << "Out of loop";
 
     // All staves have been hidden, so correct last system's header
     System* lastSys = ctx.mutState().page()->systems().back();

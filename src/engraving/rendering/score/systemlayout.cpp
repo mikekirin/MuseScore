@@ -145,6 +145,7 @@ System* SystemLayout::collectSystem(LayoutContext& ctx)
                                    ? ctx.dom().systemLocks()->lockStartingAt(ctx.state().curMeasure()) : nullptr;
 
     while (ctx.state().curMeasure()) {      // collect measure for system
+        LOGI() << "Collecting measures";
         oldSystem = ctx.mutState().curMeasure()->system();
         system->appendMeasure(ctx.mutState().curMeasure());
 
@@ -2658,6 +2659,7 @@ void SystemLayout::setMeasureHeight(System* system, double height, const LayoutC
 {
     double spatium = system->spatium();
     for (MeasureBase* m : system->measures()) {
+        LOGI() << "Inside setMeasureHeight";
         MeasureBase::LayoutData* mldata = m->mutldata();
         if (m->isMeasure()) {
             // note that the factor 2 * _spatium must be corrected for when exporting

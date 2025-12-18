@@ -264,8 +264,11 @@ void MaskLayout::maskTABStringLinesForFrets(StaffLines* staffLines, const Layout
     Shape mask;
 
     auto maskFret = [&mask, linesThrough, padding, staffLinesPos] (Chord* chord) {
+        LOGI() << "Mask fret start";
         for (Note* note : chord->notes()) {
+            LOGI() << "Mask fret";
             if (note->visible() && !note->shouldHideFret() && (!linesThrough || note->fretConflict())) {
+                LOGI() << "Mask fret. Note visible";
                 Shape noteShape = note->ldata()->bbox();
                 const Parenthesis* leftParen = note->leftParen();
                 if (leftParen && leftParen->addToSkyline()) {
@@ -279,20 +282,28 @@ void MaskLayout::maskTABStringLinesForFrets(StaffLines* staffLines, const Layout
 
                 noteShape.pad(padding);
                 mask.add(noteShape.translated(-staffLinesPos));
+                LOGI() << "Mask fret. Note visible done";
             }
         }
+        LOGI() << "Mask fret done";
     };
 
     const Measure* measure = staffLines->measure();
     for (Segment* seg = measure->first(SegmentType::ChordRest); seg; seg = seg->next(SegmentType::ChordRest)) {
+        LOGI() << "Handle segment";
         for (track_idx_t track = startTrack; track < endTrack; ++track) {
+            LOGI() << "Handle segment track: " << track;
             EngravingItem* el = seg->element(track);
             if (!el || !el->isChord()) {
                 continue;
             }
+            LOGI() << "Handle el";
             maskFret(toChord(el));
+            LOGI() << "Handle el done";
             for (Chord* grace : toChord(el)->graceNotes()) {
+                LOGI() << "Handle grace";
                 maskFret(grace);
+                LOGI() << "Handle grace done";
             }
         }
     }

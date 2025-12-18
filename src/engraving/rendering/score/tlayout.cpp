@@ -5378,6 +5378,7 @@ void TLayout::layoutForWidth(StaffLines* item, double w, LayoutContext& ctx)
     item->setPos(PointF(0.0, 0.0));
     int _lines;
     if (s) {
+        LOGI() << "staff exist";
         ldata->setMag(s->staffMag(item->measure()->tick()));
         item->setVisible(!s->isLinesInvisible(item->measure()->tick()));
         item->setColor(s->color(item->measure()->tick()));
@@ -5388,6 +5389,7 @@ void TLayout::layoutForWidth(StaffLines* item, double w, LayoutContext& ctx)
 //            if (_lines == 1)
 //                  rypos() = 2 * _spatium;
     } else {
+        LOGI() << "staff does not exist";
         _lines = 5;
         item->setColor(item->configuration()->defaultColor());
     }
@@ -5399,13 +5401,16 @@ void TLayout::layoutForWidth(StaffLines* item, double w, LayoutContext& ctx)
 
     std::vector<LineF> ll;
     for (int i = 0; i < _lines; ++i) {
+        LOGI() << "Adding line: " << i;
         ll.push_back(LineF(x1, y, x2, y));
         y += dist;
     }
     item->setLines(ll);
 
     if (s && s->staffType(item->measure()->tick())->isTabStaff()) {
+        LOGI() << "MaskLayout::maskTABStringLinesForFrets";
         MaskLayout::maskTABStringLinesForFrets(item, ctx);
+        LOGI() << "MaskLayout::maskTABStringLinesForFrets done";
     }
 }
 

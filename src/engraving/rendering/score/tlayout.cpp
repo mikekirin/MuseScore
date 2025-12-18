@@ -5409,7 +5409,7 @@ void TLayout::layoutForWidth(StaffLines* item, double w, LayoutContext& ctx)
 
     if (s && s->staffType(item->measure()->tick())->isTabStaff()) {
         LOGI() << "MaskLayout::maskTABStringLinesForFrets";
-        MaskLayout::maskTABStringLinesForFrets(item, ctx);
+        // MaskLayout::maskTABStringLinesForFrets(item, ctx);
         LOGI() << "MaskLayout::maskTABStringLinesForFrets done";
     }
 }

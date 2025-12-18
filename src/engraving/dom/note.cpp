@@ -1428,31 +1428,38 @@ void Note::updateFrettingForTiesAndBends()
 
 bool Note::shouldHideFret() const
 {
+    LOGI() << "Should hide fret";
     if (!tieBack() || shouldForceShowFret() || !staffType()->isTabStaff()) {
+        LOGI() << "Should hide fret done 1";
         return false;
     }
 
     if (isContinuationOfBend() && !rtick().isZero()) {
+        LOGI() << "Should hide fret done 2";
         return true;
     }
 
     ShowTiedFret showTiedFret = style().value(Sid::tabShowTiedFret).value<ShowTiedFret>();
     if (showTiedFret == ShowTiedFret::TIE_AND_FRET) {
+        LOGI() << "Should hide fret done 3";
         return false;
     }
 
     ParenthesizeTiedFret parenthTiedFret = style().value(Sid::tabParenthesizeTiedFret).value<ParenthesizeTiedFret>();
     if (parenthTiedFret == ParenthesizeTiedFret::NEVER || !rtick().isZero()) {
+        LOGI() << "Should hide fret done 4";
         return true;
     }
 
     if (parenthTiedFret == ParenthesizeTiedFret::START_OF_MEASURE) {
+        LOGI() << "Should hide fret done 5";
         return false;
     }
 
     const Measure* measure = findMeasure();
     bool isStartOfSystem = measure && measure->system() && measure->isFirstInSystem();
 
+    LOGI() << "Should hide fret done 6";
     return !isStartOfSystem;
 }
 
@@ -1469,21 +1476,27 @@ bool Note::shouldForceShowFret() const
 
     auto hasTremoloBar = [&] () {
         for (EngravingItem* item : ch->segment()->annotations()) {
+            LOGI() << "Checking annotation";
             if (item && item->isTremoloBar() && item->track() == track()) {
+                LOGI() << "Checking annotation found";
                 return true;
             }
         }
+        LOGI() << "Checking annotation not found";
         return false;
     };
 
     auto hasVibratoLine = [&] () {
         auto spanners = score()->spannerMap().findOverlapping(tick().ticks(), (tick() + ch->actualTicks()).ticks());
         for (auto interval : spanners) {
+            LOGI() << "Checking spanner";
             Spanner* sp = interval.value;
             if (sp->isVibrato() && sp->startElement() == ch) {
+                LOGI() << "Spanner found";
                 return true;
             }
         }
+        LOGI() << "Spanner not found";
         return false;
     };
 
@@ -3905,12 +3918,15 @@ bool Note::isContinuationOfBend() const
     Tie* tie = tieBack();
     Note* note = nullptr;
     while (tie && tie->startNote()) {
+        LOGI() << "Checking note";
         note = tie->startNote();
         if (note->bendBack()) {
+            LOGI() << "Bend found";
             return true;
         }
         tie = note->tieBack();
     }
+    LOGI() << "Bend not found";
 
     return false;
 }

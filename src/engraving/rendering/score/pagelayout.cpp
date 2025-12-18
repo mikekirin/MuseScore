@@ -125,6 +125,7 @@ void PageLayout::collectPage(LayoutContext& ctx)
     const LayoutConfiguration& conf = ctx.conf();
 
     LAYOUT_CALL() << "page->no: " << page->no();
+    LOGI() << "page->no: " << page->no();
 
     const double slb = conf.styleMM(Sid::staffLowerBorder);
     bool breakPages = conf.viewMode() != LayoutMode::SYSTEM;
@@ -158,6 +159,7 @@ void PageLayout::collectPage(LayoutContext& ctx)
     }
 
     for (;;) {
+        LOGI() << "Layout system";
         //
         // calculate distance to previous system
         //
@@ -259,6 +261,7 @@ void PageLayout::collectPage(LayoutContext& ctx)
             isPageBreak = (y + dist) >= endY && breakPages;
         }
         if (isPageBreak) {
+            LOGI() << "MSS page break";
             double dist = std::max(ctx.state().prevSystem()->minBottom(), ctx.state().prevSystem()->spacerDistance(false));
             double footerPadding = 0.0;
             // ensure it doesn't collide with footer

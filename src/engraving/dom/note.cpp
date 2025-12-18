@@ -3917,8 +3917,8 @@ bool Note::isContinuationOfBend() const
 
     Tie* tie = tieBack();
     Note* note = nullptr;
+    LOGI() << "Checking note";
     while (tie && tie->startNote()) {
-        LOGI() << "Checking note";
         note = tie->startNote();
         if (note->bendBack()) {
             LOGI() << "Bend found";

@@ -3920,6 +3920,10 @@ bool Note::isContinuationOfBend() const
     LOGI() << "Checking note";
     while (tie && tie->startNote()) {
         note = tie->startNote();
+        if (note == tie->startNote()->tieBack()->startNote()) {
+            LOGI() << "note == tie->startNote()->tieBack()->startNote()";
+            return false;
+        }
         if (note == this) {
             LOGI() << "note == this";
             return false;

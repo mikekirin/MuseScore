@@ -1221,8 +1221,10 @@ void MeasureLayout::computePreSpacingItems(Measure* m, LayoutContext& ctx)
 
 void MeasureLayout::layoutStaffLines(Measure* m, LayoutContext& ctx)
 {
+    LOGI() << "layoutStaffLines inside";
     int staffIdx = 0;
     for (const MStaff* ms : m->mstaves()) {
+        LOGI() << "Staff id: " << staffIdx;
         if (m->isCutawayClef(staffIdx) && (ctx.dom().staff(staffIdx)->cutaway() || !m->visible(staffIdx))) {
             // draw short staff lines for a courtesy clef on a hidden measure
             Segment* clefSeg = m->findSegmentR(SegmentType::Clef, m->ticks());
@@ -1230,10 +1232,14 @@ void MeasureLayout::layoutStaffLines(Measure* m, LayoutContext& ctx)
             double partialWidth = clefSeg
                                   ? m->width() - clefSeg->x() + clefSeg->minLeft() + ctx.conf().styleMM(Sid::clefLeftMargin) * staffMag
                                   : 0.0;
+            LOGI() << "layoutPartialWidth";
             layoutPartialWidth(ms->lines(), ctx, m->width(), partialWidth / (m->spatium() * staffMag), true);
+            LOGI() << "layoutPartialWidth done";
         } else {
             // normal staff lines
+            LOGI() << "TLayout::layoutStaffLines";
             TLayout::layoutStaffLines(ms->lines(), ctx);
+            LOGI() << "TLayout::layoutStaffLines done";
         }
         staffIdx += 1;
     }

@@ -374,6 +374,7 @@ System* SystemLayout::collectSystem(LayoutContext& ctx)
 
     // Re-create shapes to account for newly hidden/unhidden staves
     // (and for potential forgotten shape updates, for example in MeasureLayout::setRepeatCourtesiesAndParens)
+    LOGI() << "Re-create shapes";
     for (MeasureBase* mb : system->measures()) {
         if (mb->isMeasure()) {
             for (Segment& seg : toMeasure(mb)->segments()) {
@@ -381,11 +382,13 @@ System* SystemLayout::collectSystem(LayoutContext& ctx)
             }
         }
     }
+    LOGI() << "Re-create shapes done";
 
     // Relayout system to account for newly hidden/unhidden staves
     SystemLayout::layoutSystem(system, ctx, layoutSystemMinWidth, ctx.state().firstSystem(), ctx.state().firstSystemIndent());
 
     // Create end barlines and system trailer if needed (cautionary time/key signatures etc)
+    LOGI() << "Create end barlines and system trailer";
     Measure* lm  = system->lastMeasure();
     if (lm) {
         MeasureLayout::createEndBarLines(lm, true, ctx);
@@ -394,38 +397,59 @@ System* SystemLayout::collectSystem(LayoutContext& ctx)
             MeasureLayout::addSystemTrailer(lm, nm, ctx);
         }
     }
+    LOGI() << "Create end barlines and system trailer done";
 
+    LOGI() << "updateBigTimeSigIfNeeded";
     updateBigTimeSigIfNeeded(system, ctx);
+    LOGI() << "updateBigTimeSigIfNeeded done";
 
     // Recompute spacing to account for the last changes (barlines, hidden staves, etc)
+    LOGI() << "Recompute spacing to account";
     curSysWidth = HorizontalSpacing::computeSpacingForFullSystem(system);
+    LOGI() << "Recompute spacing to account done";
 
+    LOGI() << "curSysWidth > targetSystemWidth";
     if (curSysWidth > targetSystemWidth) {
         HorizontalSpacing::squeezeSystemToFit(system, curSysWidth, targetSystemWidth);
     }
+    LOGI() << "curSysWidth > targetSystemWidth done";
 
+    LOGI() << "shouldBeJustified";
     if (shouldBeJustified(system, curSysWidth, targetSystemWidth, ctx)) {
         HorizontalSpacing::justifySystem(system, curSysWidth, targetSystemWidth);
     }
+    LOGI() << "shouldBeJustified done";
 
     // LAYOUT MEASURES
+    LOGI() << "LAYOUT MEASURES";
     bool createBrackets = false;
     for (MeasureBase* mb : system->measures()) {
         if (mb->isMeasure()) {
             mb->setParent(system);
             Measure* m = toMeasure(mb);
+            LOGI() << "layoutMeasureElements";
             MeasureLayout::layoutMeasureElements(m, ctx);
+            LOGI() << "layoutMeasureElements done";
+            LOGI() << "layoutStaffLines";
             MeasureLayout::layoutStaffLines(m, ctx);
+            LOGI() << "layoutStaffLines done";
             if (createBrackets) {
+                LOGI() << "addBrackets";
                 SystemLayout::addBrackets(system, toMeasure(mb), ctx);
                 createBrackets = false;
+                LOGI() << "addBrackets done";
             }
         } else if (mb->isHBox()) {
             HBox* curHBox = toHBox(mb);
+            LOGI() << "layoutMeasureBase";
             TLayout::layoutMeasureBase(curHBox, ctx);
+            LOGI() << "layoutMeasureBase done";
+            LOGI() << "createSystemHeader";
             createBrackets = curHBox->createSystemHeader();
+            LOGI() << "createSystemHeader done";
         }
     }
+    LOGI() << "LAYOUT MEASURES done";
 
     LOGI() << "Layout system elements";
     layoutSystemElements(system, ctx);
